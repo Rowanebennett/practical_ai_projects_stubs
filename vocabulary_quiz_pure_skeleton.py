@@ -3,18 +3,22 @@
 # A simple quiz program using dictionaries and lists
 
 # TODO: Create an empty dictionary to store words and their definitions
-
+vocabulary = {}
 
 # TODO: Create two empty lists:
 # - One to store correctly answered words
 # - One to store incorrectly answered words
-
+correct_answers= []
+incorrect_answers= []
 
 # TODO: Create the add_word function that:
 # - Takes parameters: word (str) and definition (str)
 # - Adds the word and definition to the vocabulary dictionary
 # - Prints a message confirming the word was added
-
+def add_word (word, definition):
+    vocabulary[word] = definition
+    print("word added")
+    return
 
 # TODO: Create the take_quiz function that:
 # - Takes optional parameter: num_questions (int, default 5)
@@ -32,7 +36,27 @@
 # - If incorrect, adds to incorrect_answers list
 # - Prints the final score
 # - Returns the score
-
+def take_quiz(num_questions=5):
+    import random
+    correct_answers.clear()
+    incorrect_answers.clear()
+    if not vocabulary: 
+        print( "No words in the vocabulary.Try adding some words!")
+        return 0
+    num_questions=min(num_questions,len(vocabulary))
+    quiz_words=random.sample(list(vocabulary.keys()), num_questions)
+    score=0
+    for word in quiz_words:
+        user_definition=input(f"what is the definition of {word}")
+        if user_definition==vocabulary[word]:
+            score+=1
+            print("correct!")
+            correct_answers.append(word)
+        else:
+            incorrect_answers.append(word)
+            print("sorry, that's wrong")
+    print(f'your final score is {score}/{num_questions}')
+    return score
 
 # TODO: Create the show_results function that:
 # - Takes no parameters
@@ -42,8 +66,20 @@
 # - Otherwise, prints all correct answers with their definitions
 # - Prints all incorrect answers with their definitions
 # - Calculates and prints the final score as a fraction
-
-
+def show_results():
+    print("quiz results")
+    if not correct_answers and not incorrect_answers:
+        print("no quiz has been taken")
+        return
+    print("Correct Answers:")
+    for word in correct_answers:
+        print(f'{word}: {vocabulary[word]}')
+    print("Incorrect Answers:")
+    for word in incorrect_answers:
+        print(f'{word}: {vocabulary[word]}')
+    total_words=len(correct_answers) + len(incorrect_answers)   
+    print(f"your score is: {len(correct_answers)}/{total_words}")
+          
 # TODO: Create the main program that:
 # - Prints a welcome message
 # - Creates a menu loop with these options:
@@ -56,3 +92,30 @@
 # - For option 3: Calls show_results
 # - For option 4: Prints goodbye message and exits
 # - For invalid options: Shows error message
+def main():
+    print("Welcome to your very own Vocabulary Quiz!")
+    
+    while True:
+        print("\n Menu")
+        print("1. Add new word")
+        print("2. Take quiz")
+        print("3. Show results")
+        print("4. Exit")
+        choice = input("Enter your choice: ")  
+        if choice == "1":
+            word = input("Enter the word: ")
+            definition = input("Enter the definition: ")
+            add_word(word, definition)
+        elif choice == "2":
+            num_questions = int(input("How many questions would you like? "))
+            take_quiz(num_questions)
+        elif choice == "3":
+            show_results()
+        elif choice == "4":
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid choice! Please enter a number between 1 and 4.")
+
+if __name__== "__main__":
+    main()
